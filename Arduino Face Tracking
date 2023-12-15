@@ -3,9 +3,6 @@
 Servo headRotate;
 Servo headUp;
 
-Servo rindex, rmajeur, rpinky, rring, rbicep, rrotate, rshoulder, rclavi;
-
-
 
 String currentMessage = ""; // variable to store the current message
 
@@ -16,34 +13,18 @@ int upPos = 100;    // variable to store the servo position
 
 void setup() {
 
-  headRotate.attach(2); 
-  headUp.attach(3);
-  rmajeur.attach(4);
-  rpinky.attach(6);
-  rring.attach(7);
-  rbicep.attach(8);
-  rrotate.attach(9);
-  rshoulder.attach(10);
-  rclavi.attach(11);
-
+  headRotate.attach(12); 
+  headUp.attach(13);
+  
   delay(2000);
+
   // open the serial port:
   Serial.begin(115200);
 
-  //this pin is the one to turn on/off the magnet. It setup as digital output
-  //pinMode(rMagnetPin, OUTPUT);
 
   //all the servos to rest position or p0
   headRotate.write(rotatePos);
   headUp.write(upPos);
-  rrotate.write(80);
-  rshoulder.write(60);
-  rbicep.write(110);
-  rclavi.write(105);
-
-  // open the serial port:
-  Serial.begin(115200);
-
 
   delay(1000);
 
