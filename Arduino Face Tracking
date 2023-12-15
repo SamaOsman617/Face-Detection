@@ -1,33 +1,30 @@
 #include <Servo.h>
 
-Servo headRotate;
-Servo headUp;
+Servo headRotate;   // Create servo object to control the head rotate
+Servo headUp;   // Create servo object to control a servo
 
 
 String currentMessage = ""; // variable to store the current message
 
 
-int rotatePos = 90;    // variable to store the servo position
-int upPos = 100;    // variable to store the servo position
+int rotatePos = 90;    // variable to store the head rotate rest position
+int upPos = 100;    // variable to store the head up/down rest position
 
 
 void setup() {
 
-  headRotate.attach(12); 
-  headUp.attach(13);
-  
-  delay(2000);
+  headRotate.attach(12);    // attaches the head rotate servo on pin 12 
+  headUp.attach(13);    // attaches the head up/dowb servo on pin 13 
+
+  delay(2000);      // delay for 2 seconds
 
   // open the serial port:
-  Serial.begin(115200);
+  Serial.begin(115200);     // open the serial port
 
-
-  //all the servos to rest position or p0
-  headRotate.write(rotatePos);
-  headUp.write(upPos);
-
-  delay(1000);
-
+  headRotate.write(rotatePos);    // move the head rotate servo to the rest position
+  headUp.write(upPos);    // move the head up/down to the rest position
+  
+  delay(1000);      // delay for 1 second
 }
 
 void loop() {
@@ -41,16 +38,17 @@ void loop() {
       currentMessage = message;
     }
 
-
-    if (currentMessage == "R" && currentMessage != "C" && rotatePos > 10){
+// A block of code to control the head movement when tracking faces
+    if (currentMessage == "R" && currentMessage != "C" && rotatePos > 10){    // If the message coming from the serial says right, move the head to the right side
         rotatePos--;
       }
 
-    else if (currentMessage == "L" && currentMessage != "C" && rotatePos < 170){
+    else if (currentMessage == "L" && currentMessage != "C" && rotatePos < 170){      // If the message coming from the serial says Left, move the head to the Left side
         rotatePos++;
       }
 
-    else if ((currentMessage == "X" || currentMessage == "E") && currentMessage != "C" && rotatePos != 90 ){
+    else if ((currentMessage == "X" || currentMessage == "E") && currentMessage != "C" && rotatePos != 90 ){      // If the message coming from the serial says there is no one, move the head back to rest
+        delay(2000);
         if (rotatePos < 90){
           for(int i = rotatePos; i <= 90; i++){
             rotatePos = i;
@@ -65,13 +63,9 @@ void loop() {
             delay(50);
           }
         }
-        delay(4000);
       }
 
-    headRotate.write(rotatePos);              // tell servo to go to position in variable 'pos'
-
+    headRotate.write(rotatePos);              // Move the servo to the rotatePos value
     
     }
-
-
 }
