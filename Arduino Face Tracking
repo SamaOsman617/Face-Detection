@@ -47,23 +47,30 @@ void loop() {
         rotatePos++;
       }
 
-    else if ((currentMessage == "X" || currentMessage == "E") && currentMessage != "C" && rotatePos != 90 ){      // If the message coming from the serial says there is no one, move the head back to rest
+    else if (currentMessage == "X" && currentMessage != "C" && rotatePos != 90 ){      // If the message coming from the serial says there is no one, move the head back to rest
+        // a delay to wait for the bounding box to reappear
         delay(2000);
-        if (rotatePos < 90){
-          for(int i = rotatePos; i <= 90; i++){
-            rotatePos = i;
-            headRotate.write(rotatePos);
-            delay(50);
+
+        // first check again if the message is still X, and then go back to rest
+        if(currentMessage == 'X') {
+          delay(2000);
+          if (rotatePos < 90){
+            for(int i = rotatePos; i <= 90; i++){
+              rotatePos = i;
+              headRotate.write(rotatePos);
+              delay(50);
+            }
           }
-        }
-        else if(rotatePos > 90){
-          for(int i = rotatePos; i >= 90; i--){
-            rotatePos = i;
-            headRotate.write(rotatePos);
-            delay(50);
+
+          else if(rotatePos > 90){
+            for(int i = rotatePos; i >= 90; i--){
+              rotatePos = i;
+              headRotate.write(rotatePos);
+              delay(50);
+            }
           }
-        }
-      }
+        }     
+    }
 
     headRotate.write(rotatePos);              // Move the servo to the rotatePos value
     
