@@ -2,11 +2,10 @@ import cv2 # import the OpenCV library
 import serial # access the serial port
 import random # import the Python random module
 import time # import the Python time module
-import threading
 
 
 # Initialize serial communication with Arduino
-arduino_serial = serial.Serial('COM6', 115200) # COM7 because that is the one the Arduino Uno is connected to on this PC
+arduino_serial = serial.Serial('COM7', 115200) # COM7 because that is the one the Arduino Uno is connected to on this PC
 
 
 # Load the classifier
@@ -30,9 +29,6 @@ def detect_bounding_box(vid): # define a function that takes a video frame as an
     return faces # return the list of detected faces as a tuple of x, y, w, h values
 
 def send_to_arduino(faces):
-    # Calculations to find the way to move the servo
-    #data_to_send = f"{x},{x1},{face_width}\n"
-    #arduino_serial.write(data_to_send.encode())
     
     # Initialize variables
     x = x1 = face_width = 0
@@ -45,6 +41,7 @@ def send_to_arduino(faces):
         x1 = x + w
         face_width = w
         
+    # Calculations/ranges to find the way to move the servo
         if  (face_width < 50 and x < 290) or (49 < face_width < 100 and x < 265) or (99 < face_width < 150 and x < 240) or (149 < face_width < 200 and x < 215) or (199 < face_width < 250 and x < 195):
             message = 'L'
         elif (face_width < 50 and x1 > 350) or (49 < face_width < 100 and x1 > 375) or (99 < face_width < 150 and x1 > 400) or (149 < face_width < 200 and x1 > 425) or (199 < face_width < 250 and x1 > 445):
@@ -61,7 +58,6 @@ def send_to_arduino(faces):
     print(f"Face position: {x}, {x1}, Face width: {face_width}")
 
     # Existing message selection logic...
-
     print(f"Selected message: {message}")
 
             
@@ -69,15 +65,6 @@ def send_to_arduino(faces):
     arduino_serial.write(message.encode())
     arduino_serial.write(b'\n')
     
-def delayed():
-    Message = 'E'
-    print(Message)
-    arduino_serial.write(Message.encode())
-    arduino_serial.write(b'\n')
-
-endTrack = threading.Timer(120, delayed)
-endTrack.start()
-
     
 
 face_detected_prev = False  # Flag to track if a face was detected in the previous iteration
